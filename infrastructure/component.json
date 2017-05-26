@@ -1,0 +1,148 @@
+{
+  "Parameters": {
+    "BastionAccessSecurityGroup": {
+      "Type": "String",
+      "Description": "The security group to allow cloud bastions to access EC2"
+    },
+    "ComponentName": {
+      "Type": "String",
+      "Default": "ibl-test-app"
+    },
+    "Environment": {
+      "Type": "String"
+    },
+    "ImageId": {
+      "Type": "String",
+      "Description": "The AMI to use for this component",
+      "Default": "ami-30ff5c47"
+    },
+    "InstanceType": {
+      "Type": "String",
+      "Default": "t2.micro"
+    },
+    "KeyName": {
+      "Type": "String",
+      "Description": "The name of the EC2 key pair to enable ssh access",
+      "Default": "cosmos"
+    },
+    "MaxSize": {
+      "Type": "Number",
+      "Description": "The maximum number of instances",
+      "Default": 2
+    },
+    "MinSize": {
+      "Type": "Number",
+      "Description": "The minimum number of instances",
+      "Default": 1
+    },
+    "Region": {
+      "Type": "String",
+      "Description": "AWS region",
+      "Default": "eu-west-1"
+    },
+    "PrivateSubnets": {
+      "Type": "List<AWS::EC2::Subnet::Id>",
+      "Description": "A list of the private subnet ids"
+    },
+    "PublicSubnets": {
+      "Type": "List<AWS::EC2::Subnet::Id>",
+      "Description": "A list of the public subnet ids"
+    },
+    "VpcId": {
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "ComponentAutoScalingGroup": {
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+      "Properties": {
+        "AvailabilityZones": {
+          "Fn::GetAZs": {
+            "Ref": "Region"
+          }
+        },
+        "LaunchConfigurationName": {
+          "Ref": "ComponentLaunchConfiguration"
+        },
+        "LoadBalancerNames": [
+          {
+            "Ref": "LoadBalancer"
+          }
+        ],
+        "MaxSize": {
+          "Ref": "MaxSize"
+        },
+        "MinSize": {
+          "Ref": "MinSize"
+        },
+        "VPCZoneIdentifier": {
+          "Ref": "PrivateSubnets"
+        }
+      }
+    },
+    "ComponentLaunchConfiguration": {
+      "Type": "AWS::AutoScaling::LaunchConfiguration",
+      "Properties": {
+        "ImageId": {
+          "Ref": "ImageId"
+        },
+        "InstanceType": {
+          "Ref": "InstanceType"
+        },
+        "KeyName": {
+          "Ref": "KeyName"
+        },
+        "SecurityGroups": [
+          {
+            "Ref": "EC2SecurityGroup"
+          },
+          {
+            "Ref": "BastionAccessSecurityGroup"
+          }
+        ]
+      }
+    },
+    "LoadBalancer": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Properties": {
+        "CrossZone": true,
+        "HealthCheck": {
+          "HealthyThreshold": "2",
+          "Interval": "30",
+          "Target": "HTTP:7080/status",
+          "Timeout": "2",
+          "UnhealthyThreshold": "2"
+        },
+        "Listeners": [
+          {
+            "InstancePort": "7443",
+            "LoadBalancerPort": "443",
+            "Protocol": "TCP"
+          }
+        ],
+        "Subnets": {
+          "Ref": "PublicSubnets"
+        }
+      }
+    },
+    "EC2SecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": {
+          "Fn::Join": [
+            "",
+            [
+              "EC2 security group for ",
+              {
+                "Ref": "ComponentName"
+              }
+            ]
+          ]
+        },
+        "VpcId": {
+          "Ref": "VpcId"
+        }
+      }
+    }
+  }
+}

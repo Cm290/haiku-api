@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+  <title>API Documentation</title>
+  <link rel="stylesheet" href="github-markdown.css"/>
+  <link rel="stylesheet" href="highlight.css"/>
+  <style>
+    .documentation {
+      max-width: 60em;
+      margin: 0 auto;
+      padding: 2em 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="documentation markdown-body">
+    <h1 id="haiku-api">haiku-api</h1>
+<blockquote>
+<p>An api provide to view haikus.</p>
+</blockquote>
+<ul>
+<li><a href="#-get-haikus-"><code>GET /haikus</code></a> - returns a paginated list of all haikus</li>
+</ul>
+<h4 id="-get-haikus-"><code>GET /haikus</code></h4>
+<p>Returns a paginated list of all haikus</p>
+<h5 id="request">Request</h5>
+<pre><code class="lang-HTTP"><span class="hljs-title">GET</span> /haikus
+</code></pre>
+<h5 id="response">Response</h5>
+<pre><code class="lang-JSON"><span class="hljs-number">200</span> OK
+Content-Type: application/json
+
+{
+  <span class="hljs-string">"page"</span>: <span class="hljs-number">1</span>,
+  <span class="hljs-string">"perPage"</span>: <span class="hljs-number">20</span>,
+  <span class="hljs-string">"total"</span>: <span class="hljs-number">1</span>,
+  <span class="hljs-string">"links"</span>: {
+    <span class="hljs-string">"first"</span>: <span class="hljs-string">"http://localhost:3000/api/haikus?page=1&amp;perPage=20"</span>,
+    <span class="hljs-string">"last"</span>: <span class="hljs-string">"http://localhost:3000/api/haikus?page=1&amp;perPage=20"</span>
+  },
+  <span class="hljs-string">"results"</span>: [
+    {
+      <span class="hljs-string">"id"</span>: <span class="hljs-string">"some-id"</span>,
+      <span class="hljs-string">"title"</span>: <span class="hljs-string">"some-title"</span>,
+      <span class="hljs-string">"author"</span>: <span class="hljs-string">"some-author"</span>,
+      <span class="hljs-string">"language"</span>: <span class="hljs-string">"english"</span>,
+      <span class="hljs-string">"genre"</span>: <span class="hljs-string">"comedy"</span>,
+      <span class="hljs-string">"text"</span>: <span class="hljs-string">"There was a bear in the woods he gave a huge roar and fell asleep"</span>
+    }
+  ]
+}
+</code></pre>
+<h2 id="to-do">TO DO</h2>
+<ul>
+<li>set up a database in postgres or redis &#39;pg_ctl -D /Users/morric67/Documents/learning-day-stuff/postgres -l logfile start&#39;</li>
+<li>allow pagination</li>
+<li>allow for user set tags &quot;tags&quot;: [&quot;funny&quot;, &quot;bears&quot;, &quot;Klaus&quot;],</li>
+<li>allow for series &quot;series&quot;: &quot;part of some series?&quot;</li>
+<li>allow for stats &quot;stats&quot;: {<pre><code>                        <span class="hljs-string">"published"</span>: <span class="hljs-number">2017</span>-<span class="hljs-number">04</span>-<span class="hljs-number">07</span>,
+                        <span class="hljs-string">"comments"</span>: <span class="hljs-number">3</span>,
+                        <span class="hljs-string">"likes"</span>: <span class="hljs-number">6</span>   
+                     }
+</code></pre></li>
+</ul>
+<p>CREATE TABLE haikus (
+    id            varchar(80),
+    title         varchar(80),
+    author        varchar(80),
+    language      varchar(80),
+    genre         varchar(80),
+    text          varchar(120)
+);</p>
+
+  </div>
+</body>
+</html>

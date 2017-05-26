@@ -1,0 +1,29 @@
+{
+  "name": "haiku-api",
+  "version": "1.0.0",
+  "description": "An Api for haiku's ",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "docs": "ibl-documentation-generator",
+    "start": "PORT=7080 node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "boom": "^4.3.1",
+    "express": "^4.15.2",
+    "joi": "^10.4.1",
+    "knex": "^0.12.9",
+    "moment": "^2.18.1",
+    "on-headers": "^1.0.1",
+    "pg": "^6.1.5"
+  },
+  "devDependencies": {
+    "@ibl/documentation-generator": "^2.0.0",
+    "mocha": "^3.2.0",
+    "sinon": "^2.1.0",
+    "supertest": "^3.0.0"
+  }
+}
