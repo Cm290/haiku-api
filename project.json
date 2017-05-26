@@ -1,0 +1,18 @@
+{
+  "name": "ibl-test-app",
+  "packaging": {
+    "type": "nodejs4_service",
+    "requires": [
+      "nodejs >= 0.10.36",
+      "ibl-sysadmin",
+      "ibl-apache"
+    ]
+  },
+  "handle": [
+    {
+      "path": "/",
+      "https": true,
+      "allow_dev_certs": true
+    }
+  ]
+}
